@@ -22,6 +22,15 @@ Plugin 'VundleVim/Vundle.vim'
  Plugin 'christoomey/vim-tmux-navigator'
 
 
+Plugin 'ngemily/vim-vp4'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'jaxbot/semantic-highlight.vim'
+Plugin 'vim-scripts/highlight.vim'
+"Plugin 'xolox/vim-easytags'
+"Plugin 'vim-scripts/vim-misc'
+Plugin 'vim-scripts/hexHighlight.vim'
+
+
 
   "1 some cool colorschemes  {
     Plugin 'joshdick/onedark.vim'
@@ -81,7 +90,7 @@ Plugin 'VundleVim/Vundle.vim'
     "Plugin 'vim-airline/vim-airline'   "very heavy 
     Plugin 'pseewald/vim-anyfold'
     Plugin 'matchit.zip'
-    "Plugin 'inkarkat/vim-mark'
+  "  Plugin 'inkarkat/vim-mark'
     "Plugin 'ap/vim-buftabline'
   "}
 
@@ -116,7 +125,19 @@ Plugin 'VundleVim/Vundle.vim'
 " Plugin setting started {{{"
 call vundle#end()            " required
 filetype plugin indent on    " required by VUNDLE 
+" Show syntax highlighting groups for word under cursor
 
+nmap <C-a> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
+
+let g:vp4_prompt_on_write = 1 
+let g:vp4_allow_open_depot_file = 1
 " For Plugin 'mileszs/ack.vim' {
     if executable('ag')
       "let g:ackprg = "ag --vimgrep  "
@@ -310,6 +331,10 @@ let b:match_words=
     "noremap   t      :tabnew<CR>
     "noremap   q      :bd<CR>
     
+    nmap <C-Up> [e
+    nmap <C-Down> ]e
+    vmap <C-Up> [egv
+    vmap <C-Down> ]egv
    " tab movements
     map <C-S-]> gt
     map <C-S-[> gT
@@ -327,9 +352,9 @@ let b:match_words=
     "search
     "vnoremap  <Leader>/   y:tabnew<CR>:LAck "<C-R>""
     "nmap      <Leader>/  "zyaw:tabnew<CR>:exe " LAck ".@z."    "  
-    vnoremap  <Leader>/   y:tabnew<CR>:LAck "<C-R>"" $mmu
-    nmap      <Leader>/   yaw:tabnew<CR>:LAck <C-R>" $mmu
-    nmap      <Leader>/c  yaw:tabnew<CR>:LAck <C-R>" $mmu/common $mmu/mmu_sch_common $mmu/mmu_qsch $mmu/mmu_mainsch
+   vnoremap  <Leader>/   y:tabnew<CR>:LAck "<C-R>"" $mmu
+   nmap      <Leader>/   yaw:tabnew<CR>:LAck <C-R>" $mmu
+   nmap      <Leader>/c  yaw:tabnew<CR>:LAck <C-R>" $mmu/common $mmu/mmu_sch_common $mmu/mmu_qsch $mmu/mmu_mainsch
     vnoremap  <Leader>s   y:Ack "<C-R>"" $mmu
     nmap      <Leader>s  yaw:Ack <C-R>"  $mmu
     nmap      <Leader>sc yaw:Ack <C-R>" $mmu/common $mmu/mmu_qsch $mmu/mmu_mainsch $mmu/mmu_sch_common
@@ -359,6 +384,10 @@ let b:match_words=
     nnoremap <Leader>pd :!p4 diff %
     nnoremap <Leader>pr :!p4 revert %
     nnoremap <Leader>ps :!p4 submit  %
+
+    nnoremap <Leader>f :Vp4Filelog <CR> 
+    nnoremap <Leader>d :Vp4Diff  
+    nnoremap <Leader>p :Vp4   
     
     "autoclose tags
     ""inoremap ( ()<Left>
@@ -417,8 +446,24 @@ let b:match_words=
 ""    autocmd QuickFixCmdPost l*    lwindow
 ""augroup END
 
-
-set complete=.,w,b,u,i
+  "w	scan buffers from other windows
+	"b	scan other loaded buffers that are in the buffer list
+	"u	scan the unloaded buffers that are in the buffer list
+	"U	scan the buffers that are not in the buffer list
+	"k	scan the files given with the 'dictionary' option
+	"kspell  use the currently active spell checking |spell|
+	"k{dict}	scan the file {dict}.  Several "k" flags can be given,
+		"patterns are valid too.  For example:
+			":set cpt=k/usr/dict/*,k~/spanish
+   "s	scan the files given with the 'thesaurus' option
+	"s{tsr}	scan the file {tsr}.  Several "s" flags can be given, patterns
+		"are valid too.
+	"i	scan current and included files
+	"d	scan current and included files for defined name or macro
+		"|i_CTRL-X_CTRL-D|
+	"]	tag completion
+	"t	same as "]"
+set complete=.,w,b,u,i,t
 
 "" basic setting {{
 "more characters will be sent to the screen for redrawing
@@ -442,6 +487,13 @@ set showcmd
 "set hidden
 set nolist
 set wrap 
+" diff wrap by default
+"autocmd FilterWritePre * if &diff | setlocal wrap | endif
+"autocmd BufReadPre,BufNewFile,FileReadPre,FilterReadPre *  set wrap  
+"autocmd BufReadPost,BufNewFile,FileReadPost,FilterReadPost *  set wrap  
+"au VimEnter * if &diff | execute 'windo set wrap' | endif
+
+
 set linebreak
 set tw=0                        " Textwidth for auto wrapping
 "searches are case insensitive unless they contain at least one capital letter
@@ -468,6 +520,8 @@ set ruler   "Always show current position
 set cursorline  " good for indenting
 " Show matching brackets when text indicator is over them
 "set statusline=%=%m\ %c\ %P\ %f
+"ignoer whitespaces in diff
+set diffopt+=iwhite
 
 set showmatch 
 set foldmethod=manual
@@ -505,15 +559,57 @@ set wildmenu
 filetype indent on
 filetype plugin on
 syntax enable
-au filetype           make        set noexpandtab
-au BufRead,BufNewFile *.cfg       set filetype=perl 
-au BufRead,BufNewFile *.tpl       set filetype=webmacro 
-"au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v set filetype=systemverilog 
-au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v set filetype=verilog_systemverilog 
-au BufRead,BufNewFile *.vr,*.vrh  set cindent
-au BufRead,BufNewFile *zschrc   set filetype=zsh
-au BufRead,BufNewFile .aliases.zshrc   set filetype=zsh
-au BufRead,BufNewFile .zshrc   set filetype=zsh
+
+
+		"bold
+		"underline
+		"undercurl	not always available
+		"strikethrough	not always available
+		"reverse
+		"inverse		same as reverse
+		"italic
+		"standout
+		"nocombine	override attributes instead of combining them
+		"NONE		no attributes used (used to reset it)
+			"Red		LightRed	DarkRed
+			"Green	LightGreen	DarkGreen	SeaGreen
+			"Blue	LightBlue	DarkBlue	SlateBlue
+			"Cyan	LightCyan	DarkCyan
+			"Magenta	LightMagenta	DarkMagenta
+			"Yellow	LightYellow	Brown		DarkYellow
+			"Gray	LightGray	DarkGray
+			"Black	White
+			"Orange	Purple		Violet
+
+"" Error , TODO , 
+match TODO /SHEK/
+" Then EITHER (define your own colour scheme):
+"hi mystringGreen   guifg=Green
+"hi mystringRed     guifg=Red
+"hi mystringCyan    guifg=Cyan
+"hi mystringBlue    guifg=Blue
+"hi mystringMagenta guifg=Magenta
+"hi mystringOrange  guifg=Orange
+"hi mystringPurple  guifg=Purple
+
+if !exists("autocommands_loaded")
+	  let autocommands_loaded = 1
+    au filetype           make        set noexpandtab
+    au BufRead,BufNewFile *.cfg       set filetype=perl 
+    au BufRead,BufNewFile *.tpl       set filetype=webmacro 
+    au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  set filetype=verilog_systemverilog    | 
+    "au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  match mystringString /`mmu_info\|`uvm_info\|`mmu_error\|`mmu_warning\|`REGISTER_PLUS_ARG\|get_plus_arg_reg\|`mmu_get_plus_arg_reg/ |
+    "au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  2match mystringRed /\$\w*\|>\|<\|?\|+/               |
+    "au BufRead,BufNewFile *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  3match mystringCyan /===\|==\|=/               |
+    au BufRead,BufNewFile,BufReadPost *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  syn match mystringString /`mmu_info\|`uvm_info\|`mmu_error\|`mmu_warning/ |
+    au BufRead,BufNewFile,BufReadPost *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  syn match mystringRed /\$\w*\|>\|<\|?\|+/               |
+    au BufRead,BufNewFile,BufReadPost *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  syn match mystringCyan /===\|==\|=/               |
+    au BufRead,BufNewFile,BufReadPost *.vh,*.sv,*.svh,*.svi,*.sva,*.vpp,*.v  syn match mystringPurple /`REGISTER_PLUS_ARG\|get_plus_arg_reg\|`mmu_get_plus_arg_reg/               |
+    au BufRead,BufNewFile *.vr,*.vrh  set cindent
+    au BufRead,BufNewFile *zschrc   set filetype=zsh
+    au BufRead,BufNewFile .aliases.zshrc   set filetype=zsh
+    au BufRead,BufNewFile .zshrc   set filetype=zsh
+	endif
 
 autocmd bufwritepost .vimrc source ~/.vimrc
 
@@ -682,6 +778,15 @@ endfunction
 
 " Use tags they are awesome to jump to definition
 set tags=$mmu/tags
+"green
+hi mystringString   guifg=#99ad6a
+hi mystringRed     guifg=Red
+hi mystringCyan    guifg=Cyan
+hi mystringBlue    guifg=Blue
+hi mystringMagenta guifg=Magenta
+hi mystringOrange  guifg=Orange
+hi mystringPurple  guifg=Purple
+hi mystringGray  guifg=Gray
 """"""""""""""""profile vim begin {{{ 
 ""Vim has a built-in profile set of commands. See :h profile.
 ""
