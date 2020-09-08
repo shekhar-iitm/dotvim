@@ -5,3 +5,15 @@ Type git commit.
 git remote add origin https://github.com/shekhar-iitm/dotvim.git
 git push -u origin master
 git clone https://github.com/shekhar-iitm/dotvim 
+
+
+change file and commit  
+git commit -m "" <file>
+git push -u origin master
+git config --global credential.helper 'cache --timeout=3600'
+
+checkout 
+git clone https://github.com/shekhar-iitm/dotvim  
+
+git pull  https://github.com/shekhar-iitm/dotvim 
+
