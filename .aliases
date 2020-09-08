@@ -1,0 +1,208 @@
+
+alias zsh /tools/oss/packages/x86_64-rhel6/zsh/5.4.1/bin/zsh 
+alias gendoc '~/bin/doxygen/gendoc \!* '
+alias ionel is942002
+alias rachit rg959453
+alias ketan kj931511
+alias h history
+alias ll "ls -al"
+alias l ls -altr
+alias c clear
+alias gv '/usr/bin/gvim'
+alias gn '/tools/bin/gvim'
+alias j 'jedit'
+alias v vim
+alias cd 'chdir \!* ; ls'
+alias mygrep 'find . -name "*.sv*" | xargs ag \!* '
+alias myfirefox 'firefox -P "My Profile" --no-remote &'
+alias log 'p4 filelog \!$'
+alias edit 'p4 edit \!$'
+alias submit 'p4 submit \!$'
+alias open 'p4 opened \!$'
+alias rg '~/ripgrep/target/release/rg'
+alias pdiff 'p4 diff \!$'
+alias xdiff '~/bin/xdiff.sh \!$'
+alias xdiff2 '~/bin/xdiff2.sh \!$'
+alias mailx 'pwd | mail -s "work done at " shekhara'
+alias mkdircd 'mkdir \!$ ; cd \!$'
+alias createtemplatetest 'mkdir \!$ ; cd \!$ ; ln -s ../Makefile Makefile ; cp ../ph2_thdo_uc_qportpool/test.* . ; p4 add -t symlink Makefile; p4 add test.sv test.cfg ; sed -i s/ph2_thdo_uc_qportpool/\!$/g test.sv ; cd .. ;'
+alias fzf ~/.fzf/bin/fzf
+alias cleanws '~/bin/cleanws.sh \!$'
+alias cargo '~/.cargo/bin/cargo'
+alias clang '/tools/oss/packages/x86_64-rhel6/llvm/9.0.1/bin/clang'
+
+if ($?cclient) then
+#  echo "default client $cclient"
+else 
+setenv cclient TH2_mmu_shekhara_269
+#echo "no cclient so setting cclient TH2_mmu_shekhara_269"
+endif
+
+alias g 'gn --servername $cclient --remote-tab-silent '
+#common areas
+#setenv projectname trident4;
+#setenv projectdir "trident4_dv2";
+
+if ($?projectname) then
+  #echo "projectname is set to $projectname"
+else 
+setenv projectname tomahawk4gt;
+  echo "setting new projectname $projectname"
+endif
+
+setenv projectdir "tomahawk4e_mmu_dv2";
+#setenv projectdir "tomahawk4_mmu_dv1";
+setenv th2ws '/projects/tomahawk2_mmu_dv2/shekhara'
+setenv th3ws '/projects/tomahawk3_mmu_dv2/shekhara'
+setenv td4ws '/projects/trident4_dv2/shekhara'
+setenv th4ws "/projects/tomahawk4_mmu_dv1/shekhara"
+setenv th4ews "/projects/$projectdir/shekhara"
+setenv regrdebug '/projects/tomahawk3_mmu1_scratch/ntswmmu/tomahawk3/tomahawk3_mmu_thdo'
+setenv regr_ptsch  '/projects/tomahawk4gt_mmu_regr2/ntswmmu3/$projectname/tomahawk4gt_mmu_ptsch'
+setenv regr_mainsch  '/projects/tomahawk4gt_mmu_regr2/ntswmmu3/$projectname/tomahawk4gt_mmu_mainsch'
+setenv regr_results  '/projects/ntsw-dv3/regression/$projectname/mmu/'
+setenv rel '/projects/ntsw-dv/release'
+setenv ned '/projects/tomahawk4e_mmu_dv1/nn889810'
+alias dev 'cd $th4ews'
+
+#common env paths
+alias trashcan 'mv \!$ /projects/tomahawk3_mmu_dv2/shekhara/trashcan ; cd  /projects/tomahawk3_mmu_dv2/shekhara/trashcan ; rm -rf \$! & ;cd -'
+alias dclient '~/bin/dclient.sh'
+setenv projectroot "/projects/$projectdir/shekhara/$cclient/$projectname"
+setenv dv "$projectroot/dv"
+setenv mmu "$projectroot/dv/mmu"
+setenv mmutb "$projectroot/dv/mmu/tb"
+setenv mmubase "$projectroot/dv/mmu/common/mmu_base"
+setenv thdo "$projectroot/dv/mmu/mmu_thdo"
+setenv thdotest "$projectroot/dv/mmu/mmu_thdo/tests"
+setenv thdoenv "$projectroot/dv/mmu/mmu_thdo/env"
+setenv mmutoptest "$projectroot/dv/mmu/mmu_top/test"
+setenv toptb "$projectroot/dv/top/tb"
+setenv tpl "$projectroot/dv/mmu/doc"
+setenv script "$projectroot/dv/script"
+setenv mmuslam "$projectroot/dv/top/tb/template/mmu_generated_files"
+setenv mmutg "$projectroot/dv/mmu/common/mmutg"
+setenv reg "$projectroot/regsfile"
+setenv sae "$dv/top/tb/sae"
+setenv rtl "$projectroot/rtl"
+setenv rtlthdo "$projectroot/rtl/mmu/thdo"
+setenv rtlreg "$projectroot/rtl/mmu/regsfile"
+setenv cmicdv "$projectroot/ip_cores/cmicd/dv"
+setenv asserttpl "$dv/../doc/mmu/assertions/"
+setenv excptlst "$dv/mmu/doc/coverage"
+alias rmlocalfromclient "find . -type f | xargs p4 fstat 2 > & ! ~/temp.log ; cat ~/temp.log | grep "no such file" | awk '{print $1}' | xargs rm -f "
+
+setenv ebpts "$projectroot/dv/mmu/mmu_ebpts"
+setenv main "$projectroot/dv/mmu/mmu_mainsch"
+setenv rate "$projectroot/dv/mmu/mmu_sch_common"
+setenv cmn "$projectroot/dv/mmu/common"
+setenv epmod "$projectroot/dv/mmu/common/mmuep_uvm"
+setenv init   "$projectroot/dv/mmu/common/mmu_init"
+
+
+#common tools path /commands
+alias  tpl 'psh $dv/script/tplEditor/tplEditor \!$'
+alias grepdir 'grep --include \*.sv\*  -R '
+#alias grep ag
+# path, line, column or match
+#red, blue, green, cyan, magenta, yellow, white or black
+# fg, bg or style
+alias grep " rg --colors 'match:fg:cyan' --colors 'path:fg:yellow'  --ignore-file ~sa956222/.ignore"
+#alias myctags 'cd $mmu; ctags -R $mmu/common $mmu/mmu_sch_common  $dv/common/tdm_cfg $dv/top/tb/template/mmu_generated_files $rtl/mmu/mmu_param_defs.v '
+
+#alias myctags 'cd $mmu; ctags -R $mmu $dv/common/tdm_cfg $dv/top/tb/template/mmu_generated_files $rtl/mmu/mmu_param_defs.v'
+
+#alias myctags 'cd $mmu ; rm tag* ; find $mmu $dv/common $toptb/template  /tools/vcs/2019.06-SP1-1/etc/uvm-1.2  $dv/lib/plus_args_handler $dv/lib/nsx_base $dv/lib/nsx_reg $dv/lib/base $dv/lib/crc $dv/lib/base $dv/lib/uvm/csg_base $dv/lib/uvm/mmu_slam  -name "*.sv*" |tee tag_file.f ;  ctags -aVL tag_file.f |tee tag_log0; ctags -aRV  $reg/fullchip_regsfile/mmu_memories1_tab.svh  $reg/fullchip_regsfile/mmu_reg.svh $rtl/mmu/mmu_param_defs.v  $reg/chip*svh $reg/socregs_def.vh | tee tag_log1; '
+
+alias myctags 'cd $mmu ; rm tag* ; find $mmu $dv/common $toptb/template  /tools/vcs/2019.06-SP1-1/etc/uvm-1.2  $dv/lib/plus_args_handler $dv/lib/nsx_base $dv/lib/nsx_reg $dv/lib/base $dv/lib/crc $dv/lib/base $dv/lib/uvm/csg_base $dv/lib/uvm/mmu_slam  -name "*.sv*" |tee tag_file.f ;  ctags -aVL tag_file.f ; ctags -aRV  $reg/fullchip_regsfile/mmu_memories1_tab.svh  $reg/fullchip_regsfile/mmu_reg.svh $rtl/mmu/mmu_param_defs.v  $reg/chip*svh $reg/socregs_def.vh ; '
+
+alias openvdb 'sub psh dve -cov -full64 -dir \!$'
+alias curspace 'projrpt tomahawk2_mmu_dv2'
+#trac coverage
+#/projects/ntsw-dv/regression/tomahawk2/mmu/mmu_ccp
+# projrpt tomahawk2_mmu_dv2
+#find . -name test.cfg | xargs grep thdi
+
+alias cmptb 'cd  $mmutb/mmu_thdo; time psh make'
+alias cmptest ' sub time psh make '
+alias latrtl 'cd $rtlthdo ;p4 sync ... ; psh make ; cmptb'
+alias runtest ' psh roc -uvm  \!$ -nc "-ucli -do /home/shekhara/fsdb1.tcl" '
+#alias runtest ' psh roc -nu 1 -nc " +ntb_random_seed=1  -ucli -do /home/shekhara/fsdb1.tcl +log_level=.,debug +max_error_count=1" '
+#alias runregr 'cd $tpl ; sub time psh regress -t \!$_release -bench=\!$ -cov_code -cov_func'
+alias runregr ' sub time psh regress -uvm   -t \!$ '
+alias mmutopcmp 'cd $toptb/mmu_top/ ; sub time psh make mmu_top_partcomp'
+
+alias ebptsrtlchk 'cd $rtl/shared ; p4 sync -n clsch/... pksch/... ebshp/... prt_sch/... eipts/... ;  cd $rtl/mmu ; p4 sync -n ebpts/... ptsch/... regsfile/mmu_ebpts.regs regsfile/mmu_ptsch.regs regsfile/mdf/mmu_ptsch.ppl regsfile/mdf/mmu_ebpts* '
+alias ebptsrtlsync 'cd $rtl/shared ; p4 sync clsch/... pksch/... ebshp/... prt_sch/... eipts/... ;  cd $rtl/mmu ; p4 sync ebpts/... ptsch/... regsfile/mmu_ebpts.regs regsfile/mmu_ptsch.regs regsfile/mdf/mmu_ptsch.ppl regsfile/mdf/mmu_ebpts* '
+alias ebptsrtlmake ' cd $rtl/shared/clsch ; psh make;  cd $rtl/shared/pksch ; psh make; cd $rtl/shared/ebshp ; psh make;cd $rtl/shared/eipts ; psh make; cd $rtl/mmu/ebpts ; psh make; cd $rtl/mmu/ptsch ; psh make '
+
+alias mainrtlchk  'ebptsrtlchk ; cd $rtl/mmu ; p4 sync -n mtro/... qsch/... ppsch/... ; cd regsfile ; p4 sync -n mmu_ppsch*  mmu_qsch*  mmu_mtro*  mdf/mmu_ppsch*  mdf/mmu_mtro*  mdf/mmu_qsch*   '
+alias mainrtlsync  'ebptsrtlsync ; cd $rtl/mmu ; p4 sync mtro/... qsch/... ppsch/... ; cd regsfile ; p4 sync  mmu_ppsch*  mmu_qsch*  mmu_mtro*  mdf/mmu_ppsch*  mdf/mmu_mtro*  mdf/mmu_qsch*  '
+alias mainrtlmake  'ebptsrtlmake;  cd $rtl/mmu/mtro ; psh make ;  cd $rtl/mmu/ppsch ; psh make ;    cd $rtl/mmu/qsch ; psh make ;'
+
+alias maindvchk 'cd $dv/mmu ; p4 sync -n mmu_ebpts/... mmu_qsch/... mmu_epmodel/... mmu_mainsch/... mmu_ppsch/... mmu_mtro/... mmu_sch_common/... common/mmu_sch/... common/mmuep_uvm/... common/mmu_toq/... common/mmu_init/mmu_qsch/... common/mmu_init/mmu_mtro/... common/mmu_init/mmu_ppsch/...  common/mmu_init/mmu_ptsch/... common/mmu_init/mmu_sch/... common/mmu_init/mmu_ebpts/...'
+alias maindvupd 'cd $dv/mmu ; p4 sync mmu_ebpts/... mmu_qsch/... mmu_epmodel/... mmu_mainsch/... mmu_ppsch/... mmu_mtro/... mmu_sch_common/... common/mmu_sch/... common/mmuep_uvm/... common/mmu_toq/... common/mmu_init/mmu_qsch/... common/mmu_init/mmu_mtro/... common/mmu_init/mmu_ppsch/...  common/mmu_init/mmu_ptsch/... common/mmu_init/mmu_sch/... common/mmu_init/mmu_ebpts/... '
+
+alias checkupdtb 'cd $dv ; p4 sync -n common/... top/tb/sae/... top/tb/template/... ;  ' 
+alias checkupdsch 'cd $dv ; p4 sync -n mmu/common/... mmu/mmu_ebpts/... mmu/mmu_sch_common/... mmu/doc/... mmu/tb/...;  '
+
+alias genlst 'cd $tpl ; psh trac -project TOMAHAWK3 -regress -fc_summary\!$'  # for fc summary
+#psh make thdo : to generate lst file
+
+
+alias cmpnrun 'cmptb \!$; runtest 1'
+
+alias runtestdve 'psh roc -nu 1 -nc "+dump_top +dump_on " '
+
+#alias openverdi 'sub psh verdi +ignorefileext+c -nologo -f *.xl -ssf \!$ &'
+setenv NOVAS_GUICONF /home/sa956222/novas.conf 
+#setenv NOVAS_RC /home/sa956222/bin/novas_sav.rc 
+alias openverdi 'sub psh verdi -guiConf /projects/tomahawk4e_mmu_dv2/shekhara/abc.conf -ssf \!$ &'
+#alias wave '/tools/bin/bsub -q sj-Intsw -R rhel60 -Is "psh verdi  -ssf \!$  -sswr ../thdo_io.rc -rcFile ../novas.rc -ssr ../thdo.ses -autoalias -nologo " &'
+alias wave '/tools/bin/bsub -q sj-Intsw -R rhel60 -Is "psh verdi  -ssf \!$  -autoalias -nologo -rcFile ~/ebpts.rc -ssr ~/verdi.ses " &'
+#alias wave1 '/tools/bin/bsub -q sj-Intsw -R rhel60 -Is "psh verdi  -ssf \!$  -sswr ../thdo_io.rc  -autoalias -nologo " &'
+alias wave1 '/tools/bin/bsub -q sj-Intsw -R rhel60 -Is "psh verdi  -ssf \!$    -autoalias -nologo " &'
+
+alias top htop
+alias opendve 'psh dve &'
+alias opendvecov 'psh dve -cov & '
+
+if ("$cclient" != "TH2_mmu_shekhara_269") then
+if (-f $mmu/tags) then 
+else
+echo "creating ctags as they don't exist for cclient $cclient"
+myctags
+endif
+endif
+
+alias srca 'setenv cclient \!$ ; source ~/.aliases; cd $dv'
+
+alias my_term 'bsub -q sj-Intsw -R rhel60 konsole &'
+
+alias vncdbl 'vncserver -depth 24 -geometry 3780x1050'
+alias vncsing 'vncserver -depth 24 -geometry 1890x1050'
+alias vnclaptop 'vncserver -depth 24 -geometry 1366x768'
+
+alias lsf_sun 'bsub -I -R ultra -q sj-Intsw'
+alias bsub64 ' bsub -I -R r64bit -q sj-M32ntsw-emulation'
+alias bsub64a ' bsub -I -R r64bit -q sj-ntsw'
+alias bsubi ' /tools/bin/bsub -q sj-Intsw -R rhel60 -Is '
+alias showmounts 'ypcat -k auto_projects | sort'
+
+## vncserver -kill :<id>
+alias my_verdi 'psh sub verdi  +ignorefileext+c -chmod 777 -nologo -ssy -ssv -autoalias -sv -lib work -ssf \!$ '
+alias my_vericom 'psh sub vericom +ignorefileext+c -chmod 777 -ssy -ssv -autoalias -sv -f \!$'
+alias my_run "psh roc -num 1 -nc '-ucli -do ~/fsdb.tcl'" 
+
+alias vlist 'vncserver -list'
+alias vkill 'vncserver -kill :\!$'
+alias myterm 'xterm -sl 10000 -bg black -fg white &'
+alias my_batch_run "psh roc -batch -nc '-ucli -do ../../../doc/fsdb.tcl'" 
+
+#cd $dv/mmu ;myctags 
+
+#  Testbench - psh make mmu_<blockname>_partcomp MY_SV_OPT="+define+THDI_COVER_OFF"
+#  Test      - psh make partcomp_test MY_SV_OPT="+define+THDI_COVER_OFF"
+
+alias buglabel 'p4 -d "label" label  \!$ ; cd $dv/../ ; p4 labelsync -l \!$ ...'
+
