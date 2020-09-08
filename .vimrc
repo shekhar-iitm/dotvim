@@ -16,10 +16,11 @@ Plugin 'VundleVim/Vundle.vim'
   Plugin 'L9'   " Needed by FuzzyFinder
   Plugin 'MarcWeber/vim-addon-qf-layout'   " command is \f to format search output
   Plugin 'vhda/verilog_systemverilog.vim'
-"  Plugin 'tpope/vim-fugitive'
+  Plugin 'tpope/vim-fugitive'
  " Plugin 'scrooloose/syntastic'
 
  Plugin 'christoomey/vim-tmux-navigator'
+ Plugin 'vim-scripts/Gundo'
 
 
 Plugin 'ngemily/vim-vp4'
@@ -331,6 +332,7 @@ let b:match_words=
     "noremap   t      :tabnew<CR>
     "noremap   q      :bd<CR>
     
+    nmap <Space> za
     nmap <C-Up> [e
     nmap <C-Down> ]e
     vmap <C-Up> [egv
