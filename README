@@ -1,0 +1,6 @@
+
+Type git init.
+Type git add to add all of the relevant files.
+Type git commit.
+git remote add origin https://github.com/shekhar-iitm/dotvim.git
+git push -u origin master
